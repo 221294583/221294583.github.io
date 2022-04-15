@@ -1,0 +1,53 @@
+form
+{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: auto;
+}
+form button
+{
+    text-align: center;
+    margin-top: 3em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+    height: 5em;
+}
+ul
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+#main
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+button
+{
+    width: 10em;
+    margin-top: 3em;
+}
+#turntable_div
+{
+    position: relative;
+    margin: auto;
+    z-index: 0;
+}
+#hitbox_div
+{
+    z-index: 2;
+    position: absolute;
+    top: 0;
+}
+#tname_div
+{
+    z-index: 1;
+    position: absolute;
+    top: 0;
+}

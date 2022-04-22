@@ -19,11 +19,26 @@ $(document).ready(function () {
 });
 
 function fgo(){
-    let type=document.getElementById('template').getAttribute('key')
+    let type_code=document.getElementById('template').getAttribute('key')
+    console.log(type_code)
+    if(type_code=='0'||type_code=='境外势力'||type_code=='模板\r'){
+        alien_power=new turntable_cut(alien_power_ratio,alien_power_name)
+    }else if(type_code=='1'){
+        var info_table=document.getElementById('info_table')
+        var names=[]
+        var posss=[]
+        for(var i=1;i<info_table.children.length;i++){
+            names.push(info_table.children[i].children[0].children[0].value)
+            posss.push(info_table.children[i].children[1].children[0].value)
+        }
+        alien_power=new turntable_cut(posss,names)
+    }
+    alien_power.calculate()
+    alien_power.cal_pos_map()
     var make_turntable="<div id='hitbox_div'></div>"
     make_turntable=make_turntable.concat("<div id='turntable_div'><canvas id='turntable' height='400px' width='400px'></canvas></div>")
     document.getElementById("main").innerHTML=make_turntable
-    var radius=drawturntable(type)
+    var radius=drawturntable()
 
     var tname_div=document.createElement('div')
     tname_div.id='tname_div'
@@ -60,6 +75,102 @@ function fgo(){
     document.getElementById('main').appendChild(table_div)
 }
 
+function customize(){
+    document.getElementById('main').remove()
+    /*const nlist=document.getElementById('main')
+    while(nlist.hasChildNodes()){
+        nlist.remove(nlist.firstChild)
+    }*/
+    var main_div=document.createElement('div')
+    main_div.id='main'
+    document.body.appendChild(main_div)
+    /*var form=document.createElement('form')
+    form.id='info_form'
+    main_div.appendChild(form)*/
+    var table=document.createElement('table')
+    table.id='info_table'
+    main_div.append(table)
+    var thead_row=document.createElement('tr')
+    table.appendChild(thead_row)
+    var th_name=document.createElement('th')
+    th_name.innerHTML='名称'
+    var th_poss=document.createElement('th')
+    th_poss.innerHTML='概率'
+    thead_row.appendChild(th_name)
+    thead_row.appendChild(th_poss)
+    var first_row=document.createElement('tr')
+    table.appendChild(first_row)
+    var first_name=document.createElement('td')
+    first_name.className='name'
+    var first_poss=document.createElement('td')
+    first_poss.className='poss'
+    first_row.appendChild(first_name)
+    first_row.appendChild(first_poss)
+    var input_name=document.createElement('input')
+    input_name.className='input_name'
+    input_name.type='text'
+    //input_name.onclick='makerow()'
+    //input_name.form='form'
+    var input_poss=document.createElement('input')
+    input_poss.className='input_poss'
+    input_poss.type='number'
+    input_poss.min='1'
+    input_poss.max='100'
+    input_poss.placeholder='100'
+    //input_name.form='form'
+    first_name.appendChild(input_name)
+    first_poss.appendChild(input_poss)
+    var make_row=document.createElement('button')
+    make_row.onclick=makerow
+    make_row.innerHTML='+'
+    main_div.appendChild(make_row)
+    var make_class=document.createElement('button')
+    make_class.onclick=fgo
+    make_class.innerHTML='GO'
+    make_class.id='template'
+    make_class.setAttribute('key','1')
+    main_div.appendChild(make_class)
+}
+
+function makerow(){
+    const all_row=document.getElementById('info_table')
+    var last_row=all_row.children[all_row.children.length-1]
+    var last_poss=last_row.children[1]
+    last_poss=last_poss.firstChild
+    if(last_poss.value!=''){
+        var posss=[]
+        for(var i=1;i<all_row.children.length;i++){
+            posss.push(all_row.children[i].children[1].children[0].value)
+        }
+        var total=100
+        for(var i=0;i<posss.length;i++){
+            total-=posss[i]           
+        }
+        var new_row=document.createElement('tr')
+        document.getElementById('info_table').appendChild(new_row)
+        var new_name=document.createElement('td')
+        new_name.className='name'
+        var new_poss=document.createElement('td')
+        new_poss.className='poss'
+        new_row.appendChild(new_name)
+        new_row.appendChild(new_poss)
+        var input_name=document.createElement('input')
+        input_name.className='input_name'
+        input_name.type='text'
+        var input_poss=document.createElement('input')
+        input_poss.className='input_poss'
+        input_poss.type='number'
+        input_poss.min='1'
+        input_poss.placeholder=total
+        input_poss.max=total
+        input_poss.onclick='makerow()'
+        new_name.appendChild(input_name)
+        new_poss.appendChild(input_poss)
+    }else{
+        alert('!')
+    }
+}
+
 function drawhitbox(radius){
     var radius_new=radius/4
     var to_draw=document.getElementById("hitbox")
@@ -94,7 +205,7 @@ function drawtname(initial_angle=0){
     }
 }
 
-function drawturntable(type_code){
+function drawturntable(){
     var to_draw=document.getElementById("turntable")
     if (to_draw.getContext){
         var ctx = to_draw.getContext('2d'); 
@@ -106,11 +217,6 @@ function drawturntable(type_code){
         ctx.lineWidth = 3;
         ctx.strokeStyle = '#FF0000';
         ctx.stroke();
-        if(type_code==0||type_code=='境外势力'||type_code=='模板\r'){
-            alien_power=new turntable_cut(alien_power_ratio,alien_power_name)
-        }
-        alien_power.calculate()
-        alien_power.cal_pos_map()
         var pair=alien_power.coordination
         for (var i=0; i<pair.length; i++){
             ctx.beginPath()
@@ -153,8 +259,8 @@ function make_R(){
 
 function generate_angles(initial_angle=0){
     var angles_out=[]
-    var acceleration=2
-    var initial_velocity=100
+    var acceleration=2+Math.floor(Math.random()*5)
+    var initial_velocity=100+Math.floor(Math.random()*acceleration)
     var times=initial_velocity/acceleration
     for (var i=0;i<times;i++){
         angles_out.push(initial_velocity*i-0.5*acceleration*i*i+initial_angle)

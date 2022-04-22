@@ -77,16 +77,9 @@ function fgo(){
 
 function customize(){
     document.getElementById('main').remove()
-    /*const nlist=document.getElementById('main')
-    while(nlist.hasChildNodes()){
-        nlist.remove(nlist.firstChild)
-    }*/
     var main_div=document.createElement('div')
     main_div.id='main'
     document.body.appendChild(main_div)
-    /*var form=document.createElement('form')
-    form.id='info_form'
-    main_div.appendChild(form)*/
     var table=document.createElement('table')
     table.id='info_table'
     main_div.append(table)
@@ -109,15 +102,12 @@ function customize(){
     var input_name=document.createElement('input')
     input_name.className='input_name'
     input_name.type='text'
-    //input_name.onclick='makerow()'
-    //input_name.form='form'
     var input_poss=document.createElement('input')
     input_poss.className='input_poss'
     input_poss.type='number'
     input_poss.min='1'
     input_poss.max='100'
     input_poss.placeholder='100'
-    //input_name.form='form'
     first_name.appendChild(input_name)
     first_poss.appendChild(input_poss)
     var make_row=document.createElement('button')
